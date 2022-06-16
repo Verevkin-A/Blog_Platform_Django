@@ -4,6 +4,8 @@ from django.http import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post
 
+PAGINATION = 2  # count of posts per page
+
 
 # class-based view
 class PostListView(ListView):
@@ -11,6 +13,7 @@ class PostListView(ListView):
     template_name = "blog/home.html"
     context_object_name = "posts"
     ordering = ["-date_posted"]
+    paginate_by = PAGINATION
 
 
 class PostDetailView(DetailView):
