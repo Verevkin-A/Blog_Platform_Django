@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
@@ -28,7 +28,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class PostUpdateView(LoginRequiredMixin, UpdateView):
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Update existing post view"""
     model = Post
     fields = ["title", "content"]
@@ -36,6 +36,13 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+    def test_func(self):
+        """Testing if updated post is owned by user"""
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
 
 
 # function view
