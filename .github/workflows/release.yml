@@ -1,0 +1,21 @@
+name: release
+
+# run on every commit tag like "v_._._" (e.g v2.1.5)
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+# Create GitHub Release with specified details from last commits
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: generate new release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: false
+          files: LICENSE
